@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Layer Protocol Visualizer</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">COMPUTER NETWORKS · APPLICATION LAYER</div>
+      <h1>Application Layer Protocol Visualizer</h1>
+      <p>Interactive visualization of DNS, HTTP and SMTP communication</p>
+    </div>
+    <div class="simulation-badge">● Simulation Mode</div>
+  </header>
+
+  <main class="dashboard">
+    <!-- MAIN PANEL 1 -->
+    <section class="panel activity-panel">
+      <div class="panel-heading">
+        <div>
+          <span class="panel-number">01</span>
+          <h2>Activity Panel</h2>
+        </div>
+        <button id="resetBtn" class="ghost-btn">Reset</button>
+      </div>
+
+      <div class="activity-tabs" role="tablist">
+        <button class="activity-tab active" data-mode="browse">Browsing</button>
+        <button class="activity-tab" data-mode="mail">Mail</button>
+        <button class="activity-tab" data-mode="stream">Streaming</button>
+      </div>
+
+      <div id="browseForm" class="mode-form">
+        <label>Website URL</label>
+        <div class="input-row">
+          <input id="urlInput" type="text" value="https://example.com" placeholder="https://example.com">
+          <button id="visitBtn" class="primary-btn">Visit</button>
+        </div>
+        <div class="hint">Simulated DNS resolution followed by an HTTP request/response.</div>
+      </div>
+
+      <div id="mailForm" class="mode-form hidden">
+        <label>To</label>
+        <input id="mailTo" type="email" placeholder="recipient@example.com">
+        <label>Subject</label>
+        <input id="mailSubject" type="text" placeholder="Network Lab Assignment">
+        <label>Body</label>
+        <textarea id="mailBody" rows="5" placeholder="Write your message..."></textarea>
+        <button id="sendBtn" class="primary-btn full">Send Email</button>
+      </div>
+
+      <div id="streamForm" class="mode-form hidden">
+        <div class="video-sim">
+          <div class="video-screen">
+            <div class="play-ring">▶</div>
+            <div class="video-title">APPLICATION LAYER STREAM</div>
+            <div id="videoTime">00:00 / 00:30</div>
+          </div>
+        </div>
+        <div class="stream-controls">
+          <button id="playStreamBtn" class="primary-btn">▶ Play</button>
+          <button id="pauseStreamBtn" class="secondary-btn">Ⅱ Pause</button>
+          <select id="qualitySelect">
+            <option>360p</option>
+            <option>480p</option>
+            <option selected>720p</option>
+            <option>1080p</option>
+          </select>
+        </div>
+        <div class="hint">Simulated DNS → HTTP manifest → media segment requests.</div>
+      </div>
+
+      <div class="activity-status">
+        <span class="status-dot"></span>
+        <div>
+          <small>ACTIVITY STATUS</small>
+          <strong id="activityStatus">Ready</strong>
+        </div>
+      </div>
+
+      <div class="log-header">
+        <span>Activity Log</span>
+        <span id="logCount">0 events</span>
+      </div>
+      <div id="activityLog" class="activity-log">
+        <div class="empty-log">Perform an activity to start the log.</div>
+      </div>
+    </section>
+
+    <!-- MAIN PANEL 2 -->
+    <section class="panel visualizer-panel">
+      <div class="panel-heading">
+        <div>
+          <span class="panel-number">02</span>
+          <h2>Protocol Visualization</h2>
+        </div>
+        <div id="protocolBadge" class="protocol-badge">READY</div>
+      </div>
+
+      <div class="visualizer-summary">
+        <div>
+          <span>ACTIVE FLOW</span>
+          <strong id="flowName">No activity selected</strong>
+        </div>
+        <div class="step-counter">
+          <span>STEP</span>
+          <strong id="stepCounter">0 / 0</strong>
+        </div>
+      </div>
+
+      <div class="network-stage">
+        <div class="endpoint client">
+          <div class="endpoint-icon">C</div>
+          <span>CLIENT</span>
+        </div>
+        <div class="network-line">
+          <div id="packetArrow" class="packet-arrow"></div>
+        </div>
+        <div class="endpoint server">
+          <div class="endpoint-icon">S</div>
+          <span id="serverName">SERVER</span>
+        </div>
+      </div>
+
+      <div id="messageCard" class="message-card empty-message">
+        <div class="message-top">
+          <div>
+            <span id="messageProtocol" class="mini-badge">—</span>
+            <h3 id="messageTitle">Waiting for an activity</h3>
+          </div>
+          <span id="directionLabel" class="direction">—</span>
+        </div>
+        <p id="messageDescription">Choose Browsing, Mail, or Streaming from the Activity Panel.</p>
+        <pre id="protocolMessage">Protocol messages will appear here.</pre>
+        <div id="fieldList" class="field-list"></div>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline-title">
+          <span>Protocol Timeline</span>
+          <span id="timelineText">Ready</span>
+        </div>
+        <div id="timeline" class="timeline"></div>
+      </div>
+
+      <div class="visual-controls">
+        <button id="prevBtn" class="control-btn">‹ Previous</button>
+        <button id="autoPlayBtn" class="control-btn accent">▶ Play</button>
+        <button id="pauseBtn" class="control-btn">Ⅱ Pause</button>
+        <button id="nextBtn" class="control-btn">Next ›</button>
+        <button id="replayBtn" class="control-btn">↻ Replay</button>
+      </div>
+
+      <div class="progress-area">
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        <span id="progressText">0%</span>
+      </div>
+
+      <div class="educational-note">
+        <strong>Simulation Mode</strong>
+        Protocol exchanges are educational representations, not live packet capture.
+      </div>
+    </section>
+  </main>
+
+  <footer>Computer Networks – Application Layer · Dual-Panel Activity &amp; Protocol Visualizer</footer>
+  <script src="/static/script.js"></script>
+</body>
+</html>
